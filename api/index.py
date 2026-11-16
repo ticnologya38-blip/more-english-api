@@ -1,4 +1,4 @@
-﻿from fastapi import FastAPI, UploadFile, File, Header, HTTPException
+from fastapi import FastAPI, UploadFile, File, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
@@ -25,7 +25,7 @@ app.add_middleware(
 # API Keys المسموح بيها
 VALID_API_KEYS = {"more-english-key-2024"}
 
-def verify_key(api_key: str = Header(...)):
+def verify_key(api_key: str = Header(..., alias="x-api-key")):
     if api_key not in VALID_API_KEYS:
         raise HTTPException(status_code=401, detail="API Key غلط")
     return api_key
@@ -87,7 +87,7 @@ def extract_text_from_pdf(content: bytes):
 @app.post("/flashcards/generate")
 async def generate_flashcards(
     file: UploadFile = File(...),
-    api_key: str = Header(...)
+    api_key: str = Header(..., alias="x-api-key")
 ):
     verify_key(api_key)
     content = await file.read()
@@ -121,7 +121,7 @@ async def generate_flashcards(
 @app.post("/quiz/generate")
 async def generate_quiz(
     file: UploadFile = File(...),
-    api_key: str = Header(...)
+    api_key: str = Header(..., alias="x-api-key")
 ):
     verify_key(api_key)
     content = await file.read()
@@ -171,7 +171,7 @@ class StudentData(BaseModel):
 @app.post("/study-plan/generate")
 async def generate_study_plan(
     data: StudentData,
-    api_key: str = Header(...)
+    api_key: str = Header(..., alias="x-api-key")
 ):
     verify_key(api_key)
     
