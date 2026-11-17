@@ -5,12 +5,7 @@ from typing import List, Optional
 from datetime import date
 import os, json, re, io, requests
 from pypdf import PdfReader
-
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
-if not GROQ_API_KEY:
-    raise RuntimeError("❌ مفيش GROQ_API_KEY في Environment Variables")
-
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 app = FastAPI(title="More English Backend")
 
 app.add_middleware(
